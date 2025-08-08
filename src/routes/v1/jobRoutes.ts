@@ -313,7 +313,7 @@ const {
 
 const jobRouter = Router();
 
-const roles = ["admin", "hr"];
+const roles = ["admin"];
 
 jobRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(roles, 'createJob'), createJob);
 jobRouter.get('/detail/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'getJobById'), getJobById);

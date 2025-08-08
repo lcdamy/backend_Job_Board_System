@@ -107,7 +107,7 @@ export const getTokenByEmail = async (req: Request, res: Response): Promise<Resp
                 names: user.names,
                 profilePictureURL: user.profilePictureURL
             },
-            86400 // Token expiration time in seconds (1 day)
+            parseInt(process.env.TOKEN_VALIDATION_TIME || '86400')
         );
 
         logger.info(`Token generated for user: ${socialLoginDTO.email}`);
@@ -166,7 +166,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
                 names: user.names,
                 profilePictureURL: user.profilePictureURL
             },
-            86400 // Token expiration time in seconds (1 day)
+            parseInt(process.env.TOKEN_VALIDATION_TIME || '86400') // Token expiration time in seconds (1 day)
         );
 
         logger.info(`Login successful for user: ${email}`);
@@ -262,7 +262,7 @@ const sendWelcomeEmail = async (user: any, role: string, type: string) => {
     };
 
     const sendEmailWithContext = async (message: string, linkLabel: string) => {
-        const token = generateToken({ email: user.email }, 86400);
+        const token = generateToken({ email: user.email }, parseInt(process.env.TOKEN_VALIDATION_TIME || '86400'));
         context.message = message;
 
         context.link_label = linkLabel;

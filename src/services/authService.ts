@@ -74,7 +74,7 @@ export class AuthService {
             profilePictureURL: user.profilePictureURL,
         };
 
-        const token = generateToken(tokenPayload, 86400);
+        const token = generateToken(tokenPayload, parseInt(process.env.TOKEN_VALIDATION_TIME || '86400'));
         logger.info(`User logged in successfully with email ${email}`);
         return token;
     }
@@ -140,7 +140,7 @@ export class AuthService {
 
         await User.update(user.id!, { userStatus: userStatuses.Inactive });
 
-        const token = generateToken({ email: user.email }, 86400);
+        const token = generateToken({ email: user.email }, parseInt(process.env.TOKEN_VALIDATION_TIME || '86400'));
         const resetLink = `${this.frontend_host}/reset-password?token=${token}`;
         logger.info(`Password reset link generated for email ${email}: ${resetLink}`);
         context.subject = 'iSCO Job board system challenge Password Reset';

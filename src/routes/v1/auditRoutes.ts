@@ -126,7 +126,7 @@ const { authorizationMiddleware } = require("../../middlewares/authorizationMidd
 
 const auditRouter = Router();
 
-const roles = ["admin", "hr"];
+const roles = ["admin"];
 
 auditRouter.get("/all", authenticationMiddleware(), authorizationMiddleware(roles, '_viewAudit'), _viewAudit);
 auditRouter.get("/detail/:id", authenticationMiddleware(), authorizationMiddleware(roles, '_getAuditDetails'), _getAuditDetails);

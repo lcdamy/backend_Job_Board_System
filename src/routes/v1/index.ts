@@ -8,9 +8,9 @@ import auditRouter from './auditRoutes';
 const router = express.Router();
 
 router.use('/auth', authRoutes);
-// router.use('/application', applicationRoutes);
 router.use('/job', jobRoutes);
 router.use('/audits', auditRouter);
+router.use('/application', applicationRoutes);
 
 
 export default router;

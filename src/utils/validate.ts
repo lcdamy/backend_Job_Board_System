@@ -118,3 +118,15 @@ export const jobValidationSchema = Joi.object({
         }),
 });
 
+export const applicationValidationSchema = Joi.object({
+    jobId: numberField('Job ID'),
+    userId: numberField('User ID'),
+    coverLetter: createStringField(10, 'Cover letter'),
+    resumeURL: uriField('Resume URL'),
+    jobTitle: Joi.string().optional(),
+    userName: Joi.string().optional(),
+    userEmail: Joi.string().email().optional(),
+    phoneNumber: phoneNumberField.optional(),
+    email: Joi.string().email().optional(),
+    linkedInProfile: uriField('LinkedIn Profile').optional()
+});

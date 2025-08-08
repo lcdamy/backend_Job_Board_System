@@ -40,6 +40,18 @@ const configureMiddlewares = () => {
 const configureRoutes = () => {
     app.use('/api', routes); // Main API routes
     app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpecs)); // Swagger docs
+    app.get('/uploads/:file', (req, res) => {
+        const filePath = path.resolve(__dirname, '..', 'uploads', req.params.file);
+        res.download(filePath, req.params.file, (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                const statusCode = (err as any).status || 500;
+                res.status(statusCode).end();
+            } else {
+                console.log('File downloaded:', req.params.file);
+            }
+        });
+    });
 
 };
 

@@ -1,4 +1,4 @@
-import { JobApplicationInterface } from '../types';
+import { applicationStatuses, JobApplicationInterface } from '../types';
 import { db } from '../config/db';
 
 export class Application implements JobApplicationInterface {
@@ -7,7 +7,7 @@ export class Application implements JobApplicationInterface {
         public userId: number,
         public coverLetter: string,
         public resumeURL: string,
-        public status: string,
+        public status: applicationStatuses,
         public appliedAt: Date,
         public updatedAt: Date,
         public id?: number

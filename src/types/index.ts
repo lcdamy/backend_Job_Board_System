@@ -24,6 +24,16 @@ export enum jobTypes {
     Freelance = "freelance"
 };
 
+export enum applicationStatuses {
+    Applied = "applied",
+    UnderReview = "under-review",
+    InterviewScheduled = "interview-scheduled",
+    OfferMade = "offer-made",
+    Rejected = "rejected",
+    Accepted = "accepted",
+    Pending = "pending"
+};
+
 export interface UserInterface {
     id?: number;
     names: string;
@@ -75,7 +85,10 @@ export interface JobApplicationInterface {
     userId: number;
     coverLetter: string;
     resumeURL: string;
-    status: string;
+    status: applicationStatuses;
+    phoneNumber?: string;
+    email?: string;
+    linkedInProfile?: string;
     appliedAt: Date;
     updatedAt: Date;
     jobTitle?: string;
