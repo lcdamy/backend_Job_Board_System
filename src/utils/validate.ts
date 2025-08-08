@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { jobTypes, jobStatuses } from "../types";
 
 // Constants for repeated messages
 const requiredFieldMessage = (field: string) => `${field} is a required field`;
@@ -82,3 +83,38 @@ export const userSocialLoginValidationSchema = Joi.object({
     }),
     profilePictureURL: uriField('Profile picture URL')
 });
+
+export const jobValidationSchema = Joi.object({
+    title: createStringField(3, 'Job title'),
+    description: createStringField(10, 'Job description'),
+    company: createStringField(3, 'Company name'),
+    location: createStringField(3, 'Job location'),
+    deadline: Joi.date().greater('now').required().messages({
+        'date.greater': 'Deadline must be a future date',
+        'any.required': requiredFieldMessage('Deadline')
+    }),
+    type: Joi.string()
+        .valid(
+            jobTypes.FullTime,
+            jobTypes.PartTime,
+            jobTypes.Contract,
+            jobTypes.Internship,
+            jobTypes.Freelance
+        )
+        .required()
+        .messages({
+            'any.only': `Job type must be one of: ${Object.values(jobTypes).join(', ')}`,
+            'any.required': requiredFieldMessage('Job type')
+        }),
+    status: Joi.string()
+        .valid(
+            jobStatuses.Open,
+            jobStatuses.Closed
+        )
+        .required()
+        .messages({
+            'any.only': `Job status must be one of: ${Object.values(jobStatuses).join(', ')}`,
+            'any.required': requiredFieldMessage('Job status')
+        }),
+});
+

@@ -13,51 +13,30 @@
  *           schema:
  *             type: object
  *             properties:
- *               position:
+ *               title:
  *                 type: string
  *                 example: "Software Engineer"
- *               positionLeft:
- *                 type: number
- *                 example: 3
- *               applicants:
- *                 type: number
- *                 example: 10
- *               interviewed:
- *                 type: number
- *                 example: 5
- *               rejected:
- *                 type: number
- *                 example: 2
- *               feedbackPending:
- *                 type: number
- *                 example: 1
- *               offered:
- *                 type: number
- *                 example: 1
  *               description:
  *                 type: string
  *                 example: "Responsible for developing backend services."
- *               requirements:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["TypeScript", "Node.js"]
- *               responsabilities:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["Write clean code", "Review PRs"]
- *               applicationDeadline:
+ *               company:
+ *                 type: string
+ *                 example: "Isco tech"
+ *               location:
+ *                 type: string
+ *                 example: "Kigali,Rwanda"
+ *               deadline:
  *                 type: string
  *                 format: date
- *                 example: "2024-07-01"
- *               applicationLink:
- *                 type: string
- *                 example: "https://company.com/apply"
+ *                 example: "2025-09-01"
  *               status:
  *                 type: string
  *                 enum: [open, closed]
  *                 example: "open"
+ *               type:
+ *                 type: string
+ *                 enum: [full-time, part-time, contract, internship]
+ *                 example: "full-time"
  *     responses:
  *       200:
  *         description: Job created successfully
@@ -73,7 +52,7 @@
  *                   example: "error"
  *                 message:
  *                   type: string
- *                   example: "Position is a required field"
+ *                   example: "Title is a required field"
  */
 
 /**
@@ -101,37 +80,30 @@
  *               properties:
  *                 _id:
  *                   type: string
- *                 position:
+ *                 title:
  *                   type: string
- *                 positionLeft:
- *                   type: number
- *                 applicants:
- *                   type: number
- *                 interviewed:
- *                   type: number
- *                 rejected:
- *                   type: number
- *                 feedbackPending:
- *                   type: number
- *                 offered:
- *                   type: number
+ *                   example: "Software Engineer"
  *                 description:
  *                   type: string
- *                 requirements:
- *                   type: array
- *                   items:
- *                     type: string
- *                 responsabilities:
- *                   type: array
- *                   items:
- *                     type: string
- *                 applicationDeadline:
+ *                   example: "Responsible for developing backend services."
+ *                 company:
+ *                   type: string
+ *                   example: "Isco tech"
+ *                 location:
+ *                   type: string
+ *                   example: "Kigali,Rwanda"
+ *                 deadline:
  *                   type: string
  *                   format: date
- *                 applicationLink:
- *                   type: string
+ *                   example: "2025-09-01"
  *                 status:
  *                   type: string
+ *                   enum: [open, closed]
+ *                   example: "open"
+ *                 type:
+ *                   type: string
+ *                   enum: [full-time, part-time, contract, internship]
+ *                   example: "full-time"
  *       404:
  *         description: Job not found
  *         content:
@@ -169,38 +141,30 @@
  *           schema:
  *             type: object
  *             properties:
- *               position:
+ *               title:
  *                 type: string
- *               positionLeft:
- *                 type: number
- *               applicants:
- *                 type: number
- *               interviewed:
- *                 type: number
- *               rejected:
- *                 type: number
- *               feedbackPending:
- *                 type: number
- *               offered:
- *                 type: number
+ *                 example: "Software Engineer"
  *               description:
  *                 type: string
- *               requirements:
- *                 type: array
- *                 items:
- *                   type: string
- *               responsabilities:
- *                 type: array
- *                 items:
- *                   type: string
- *               applicationDeadline:
+ *                 example: "Responsible for developing backend services."
+ *               company:
+ *                 type: string
+ *                 example: "Isco tech"
+ *               location:
+ *                 type: string
+ *                 example: "Kigali,Rwanda"
+ *               deadline:
  *                 type: string
  *                 format: date
- *               applicationLink:
- *                 type: string
+ *                 example: "2025-09-01"
  *               status:
  *                 type: string
  *                 enum: [open, closed]
+ *                 example: "open"
+ *               type:
+ *                 type: string
+ *                 enum: [full-time, part-time, contract, internship]
+ *                 example: "full-time"
  *     responses:
  *       200:
  *         description: Job updated successfully
@@ -216,7 +180,7 @@
  *                   example: "error"
  *                 message:
  *                   type: string
- *                   example: "Invalid job data"
+ *                   example: "Title is a required field"
  *       404:
  *         description: Job not found
  *         content:
@@ -309,37 +273,30 @@
  *                 properties:
  *                   _id:
  *                     type: string
- *                   position:
+ *                   title:
  *                     type: string
- *                   positionLeft:
- *                     type: number
- *                   applicants:
- *                     type: number
- *                   interviewed:
- *                     type: number
- *                   rejected:
- *                     type: number
- *                   feedbackPending:
- *                     type: number
- *                   offered:
- *                     type: number
+ *                     example: "Software Engineer"
  *                   description:
  *                     type: string
- *                   requirements:
- *                     type: array
- *                     items:
- *                       type: string
- *                   responsabilities:
- *                     type: array
- *                     items:
- *                       type: string
- *                   applicationDeadline:
+ *                     example: "Responsible for developing backend services."
+ *                   company:
+ *                     type: string
+ *                     example: "Isco tech"
+ *                   location:
+ *                     type: string
+ *                     example: "Kigali,Rwanda"
+ *                   deadline:
  *                     type: string
  *                     format: date
- *                   applicationLink:
- *                     type: string
+ *                     example: "2025-09-01"
  *                   status:
  *                     type: string
+ *                     enum: [open, closed]
+ *                     example: "open"
+ *                   type:
+ *                     type: string
+ *                     enum: [full-time, part-time, contract, internship]
+ *                     example: "full-time"
  */
 
 

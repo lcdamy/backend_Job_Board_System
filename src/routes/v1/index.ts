@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use('/auth', authRoutes);
 // router.use('/application', applicationRoutes);
-// router.use('/job', jobRoutes);
+router.use('/job', jobRoutes);
 router.use('/audits', auditRouter);
 
 
