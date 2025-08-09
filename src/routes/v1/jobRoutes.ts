@@ -11,48 +11,29 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *                 example: "Software Engineer"
- *               description:
- *                 type: string
- *                 example: "Responsible for developing backend services."
- *               company:
- *                 type: string
- *                 example: "Isco tech"
- *               location:
- *                 type: string
- *                 example: "Kigali,Rwanda"
- *               deadline:
- *                 type: string
- *                 format: date
- *                 example: "2025-09-01"
- *               status:
- *                 type: string
- *                 enum: [open, closed]
- *                 example: "open"
- *               type:
- *                 type: string
- *                 enum: [full-time, part-time, contract, internship]
- *                 example: "full-time"
+ *             $ref: '#/components/schemas/JobDTO'
  *     responses:
- *       200:
+ *       201:
  *         description: Job created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Job'
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "error"
- *                 message:
- *                   type: string
- *                   example: "Title is a required field"
+ *               $ref: '#/components/schemas/ApiResponse'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 
 /**
@@ -76,47 +57,22 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 title:
- *                   type: string
- *                   example: "Software Engineer"
- *                 description:
- *                   type: string
- *                   example: "Responsible for developing backend services."
- *                 company:
- *                   type: string
- *                   example: "Isco tech"
- *                 location:
- *                   type: string
- *                   example: "Kigali,Rwanda"
- *                 deadline:
- *                   type: string
- *                   format: date
- *                   example: "2025-09-01"
- *                 status:
- *                   type: string
- *                   enum: [open, closed]
- *                   example: "open"
- *                 type:
- *                   type: string
- *                   enum: [full-time, part-time, contract, internship]
- *                   example: "full-time"
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Job'
  *       404:
  *         description: Job not found
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "error"
- *                 message:
- *                   type: string
- *                   example: "Job not found"
+ *               $ref: '#/components/schemas/ApiResponse'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 
 /**
@@ -139,61 +95,35 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *                 example: "Software Engineer"
- *               description:
- *                 type: string
- *                 example: "Responsible for developing backend services."
- *               company:
- *                 type: string
- *                 example: "Isco tech"
- *               location:
- *                 type: string
- *                 example: "Kigali,Rwanda"
- *               deadline:
- *                 type: string
- *                 format: date
- *                 example: "2025-09-01"
- *               status:
- *                 type: string
- *                 enum: [open, closed]
- *                 example: "open"
- *               type:
- *                 type: string
- *                 enum: [full-time, part-time, contract, internship]
- *                 example: "full-time"
+ *             $ref: '#/components/schemas/JobDTO'
  *     responses:
  *       200:
  *         description: Job updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Job'
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "error"
- *                 message:
- *                   type: string
- *                   example: "Title is a required field"
+ *               $ref: '#/components/schemas/ApiResponse'
  *       404:
  *         description: Job not found
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "error"
- *                 message:
- *                   type: string
- *                   example: "Job not found"
+ *               $ref: '#/components/schemas/ApiResponse'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 
 /**
@@ -217,27 +147,17 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "success"
- *                 message:
- *                   type: string
- *                   example: "Job deleted"
+ *               $ref: '#/components/schemas/ApiResponse'
  *       404:
  *         description: Job not found
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "error"
- *                 message:
- *                   type: string
- *                   example: "Job not found"
+ *               $ref: '#/components/schemas/ApiResponse'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 
 /**
@@ -267,36 +187,16 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   title:
- *                     type: string
- *                     example: "Software Engineer"
- *                   description:
- *                     type: string
- *                     example: "Responsible for developing backend services."
- *                   company:
- *                     type: string
- *                     example: "Isco tech"
- *                   location:
- *                     type: string
- *                     example: "Kigali,Rwanda"
- *                   deadline:
- *                     type: string
- *                     format: date
- *                     example: "2025-09-01"
- *                   status:
- *                     type: string
- *                     enum: [open, closed]
- *                     example: "open"
- *                   type:
- *                     type: string
- *                     enum: [full-time, part-time, contract, internship]
- *                     example: "full-time"
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/PaginatedJobsResponse'
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 
 /**
@@ -307,66 +207,45 @@
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number to retrieve
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of items per page
  *     responses:
  *       200:
  *         description: List of jobs with applications retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   title:
- *                     type: string
- *                     example: "Software Engineer"
- *                   description:
- *                     type: string
- *                     example: "Responsible for developing backend services."
- *                   company:
- *                     type: string
- *                     example: "Isco tech"
- *                   location:
- *                     type: string
- *                     example: "Kigali,Rwanda"
- *                   deadline:
- *                     type: string
- *                     format: date
- *                     example: "2025-09-01"
- *                   status:
- *                     type: string
- *                     enum: [open, closed]
- *                     example: "open"
- *                   type:
- *                     type: string
- *                     enum: [full-time, part-time, contract, internship]
- *                     example: "full-time"
- *                   applications:
- *                     type: array
- *                     items:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
  *                       type: object
  *                       properties:
- *                         _id:
- *                           type: string
- *                         applicantName:
- *                           type: string
- *                           example: "John Doe"
- *                         applicantEmail:
- *                           type: string
- *                           example: "john.doe@example.com"
- *                         resumeUrl:
- *                           type: string
- *                           example: "https://example.com/resume.pdf"
- *                         status:
- *                           type: string
- *                           enum: [pending, accepted, rejected]
- *                           example: "pending"
- *                         appliedAt:
- *                           type: string
- *                           format: date-time
- *                           example: "2024-06-01T12:00:00Z"
+ *                         data:
+ *                           type: array
+ *                           items:
+ *                             $ref: '#/components/schemas/Job'
+ *                         total:
+ *                           type: integer
+ *                           example: 100
+ *                         page:
+ *                           type: integer
+ *                           example: 1
+ *                         lastPage:
+ *                           type: integer
+ *                           example: 10
  *       401:
  *         description: Unauthorized
  *       403:
