@@ -106,39 +106,44 @@ export const createTablesIfNotExist = (): Promise<void> => {
 
         const tables = [createUsersTable, createJobsTable, createApplicationsTable, createAuditLogsTable];
         
-        let completed = 0;
-        const total = tables.length + createIndexes.length;
+        // Create tables first, then indexes
+        const createTablesSequentially = async () => {
+            try {
+                // Create all tables first
+                for (const sql of tables) {
+                    await new Promise<void>((resolveTable, rejectTable) => {
+                        db.run(sql, (err) => {
+                            if (err) {
+                                console.error('Error creating table:', err);
+                                rejectTable(err);
+                                return;
+                            }
+                            resolveTable();
+                        });
+                    });
+                }
+                console.log('All tables created successfully');
 
-        const checkComplete = () => {
-            completed++;
-            if (completed === total) {
-                console.log('All tables and indexes created successfully');
+                // Then create all indexes
+                for (const sql of createIndexes) {
+                    await new Promise<void>((resolveIndex, rejectIndex) => {
+                        db.run(sql, (err) => {
+                            if (err) {
+                                console.error('Error creating index:', err);
+                                rejectIndex(err);
+                                return;
+                            }
+                            resolveIndex();
+                        });
+                    });
+                }
+                console.log('All indexes created successfully');
                 resolve();
+            } catch (error) {
+                reject(error);
             }
         };
 
-        // Create tables
-        tables.forEach(sql => {
-            db.run(sql, (err) => {
-                if (err) {
-                    console.error('Error creating table:', err);
-                    reject(err);
-                    return;
-                }
-                checkComplete();
-            });
-        });
-
-        // Create indexes
-        createIndexes.forEach(sql => {
-            db.run(sql, (err) => {
-                if (err) {
-                    console.error('Error creating index:', err);
-                    reject(err);
-                    return;
-                }
-                checkComplete();
-            });
-        });
+        createTablesSequentially();
     });
 };

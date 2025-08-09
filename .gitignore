@@ -36,3 +36,6 @@ zipped/
 
 # public files
 public/
+
+# database files
+data/database.sqlite
