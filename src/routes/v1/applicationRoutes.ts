@@ -269,7 +269,7 @@ const {
     getAllApplications,
     uploadFile
 
-} = require("../../controllers/ApplicationController");
+} = require("../../controllers/applicationController");
 const { authenticationMiddleware } = require("../../middlewares/authenticationMiddleware");
 const { authorizationMiddleware } = require("../../middlewares/authorizationMiddleware");
 const { getUploadMiddleware } = require("../../middlewares/bucket");
