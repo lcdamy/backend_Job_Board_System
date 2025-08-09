@@ -38,4 +38,4 @@ zipped/
 public/
 
 # database files
-data/database.sqlite
+data/*
