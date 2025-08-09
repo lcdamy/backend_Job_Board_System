@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build",
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev --respawn src/app.ts",
     "migrate": "ts-node src/scripts/migrate.ts",
     "seed": "ts-node src/seeds/seedFirstAdmin.ts",
+    "build": "tsc --build",
+    "start": "npm run migrate && npm run seed && node dist/app.js",
+    "dev": "ts-node-dev --respawn src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
