@@ -1,13 +1,12 @@
 import { Application } from "../models/Application";
 import { User } from "../models/User";
+import { Job } from "../models/Job";
 import { sendEmail } from "../utils/emailService";
 import logger from '../config/logger';
 import { applicationStatuses } from '../types';
 import { ApplicationDTO } from "../dtos/applicationDTO";
 import fs from 'fs';
-import path from 'path';
-
-
+import path from 'path'; 
 export class ApplicationService {
     private frontend_host = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:3000';
     private backend_host = process.env.BACKEND_URL ? process.env.BACKEND_URL : 'http://localhost:3001';
@@ -25,19 +24,31 @@ export class ApplicationService {
             userId,
             applicationData.coverLetter,
             applicationData.resumeURL,
-            applicationStatuses.Pending,
+            applicationStatuses.Pending, // Default status
             new Date(),
-            new Date()
+            new Date(),
+            undefined, // id will be auto-generated
+            applicationData.phoneNumber,
+            applicationData.email,
+            applicationData.linkedInProfile,
+            applicationData.jobTitle,
+            user.names // Assuming names is the user's name
         );
 
         const savedApplication = await Application.save(newApplication);
+
+        const job = await Job.findOne(applicationData.jobId);
+        if (!job) {
+            logger.error(`Application creation failed: Job not found with id ${applicationData.jobId}`);
+            throw new Error('Job not found');
+        }
 
         const context = {
             year: new Date().getFullYear(),
             logo_url: process.env.LOGO_URL,
             subject: 'Application Submitted Successfully',
             name: user.names,
-            message: `Your application for job ID "${savedApplication.jobId}" has been submitted.`,
+            message: `Your application for job titled "${job.title}" has been submitted. We will review your application and contact you if your resume matches our desired qualifications.`,
             link: `${this.frontend_host}/login`,
             link_label: 'Log in to your account'
         };
@@ -120,5 +131,25 @@ export class ApplicationService {
         logger.info(`File moved to uploads directory: ${filePath}`);
         // Optionally, you can save the file URL to the user's record or a related model
         return { url: fileUrl };
+    }
+
+    // Get application by job and user
+    async getApplicationByJobAndUser(jobId: number, userId: number): Promise<Application | null> {
+        const application = await Application.findApplicationByJobSeeker(jobId, userId);
+        if (!application) {
+            logger.warn(`No application found for jobId ${jobId} and userId ${userId}`);
+            return null;
+        }
+        return application;
+    }
+
+    // Get applications by job ID
+    async getApplicationsByJobId(jobId: number): Promise<Application[]> {
+        const applications = await Application.getApplicationsByJobId(jobId);
+        if (applications.length === 0) {
+            logger.warn(`No applications found for jobId ${jobId}`);
+            return [];
+        }
+        return applications;
     }
 }

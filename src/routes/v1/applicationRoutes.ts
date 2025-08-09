@@ -31,16 +31,16 @@
  *               jobTitle:
  *                 type: string
  *                 example: "Software Engineer"
- *               Names:
+ *               names:
  *                 type: string
  *                 example: "John Doe"
  *               phoneNumber:
  *                 type: string
- *                 example: "1234567890"
+ *                 example: "+250785485889"
  *               email:
  *                 type: string
  *                 format: email
- *                 example: "john@example.com"
+ *                 example: "zudanga100@gmail.com"
  *               linkedInProfile:
  *                 type: string
  *                 format: uri
@@ -136,15 +136,9 @@
  *           schema:
  *             type: object
  *             properties:
- *               coverLetter:
- *                 type: string
- *                 example: "Updated cover letter"
- *               resume:
- *                 type: string
- *                 example: "https://example.com/updated_resume.pdf"
  *               status:
  *                 type: string
- *                 example: "reviewed"
+ *                 example: "under-review"
  *     responses:
  *       200:
  *         description: Application updated successfully
@@ -160,7 +154,7 @@
  *                   example: "error"
  *                 message:
  *                   type: string
- *                   example: "coverLetter is required"
+ *                   example: "status is required"
  *       404:
  *         description: Application not found
  *         content:
@@ -283,11 +277,11 @@ const { getUploadMiddleware } = require("../../middlewares/bucket");
 const ApplicationRouter = Router();
 const roles = ["admin", "job-seeker"];
 
-ApplicationRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(roles, 'createApplication'), createApplication);
+ApplicationRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(["job-seeker"], 'createApplication'), createApplication);
 ApplicationRouter.get('/detail/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'getApplicationById'), getApplicationById);
-ApplicationRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'updateApplication'), updateApplication);
-ApplicationRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'deleteApplication'), deleteApplication);
+ApplicationRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'updateApplication'), updateApplication);
+ApplicationRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'deleteApplication'), deleteApplication);
 ApplicationRouter.get('/list', authenticationMiddleware(), authorizationMiddleware(roles, 'getAllApplications'), getAllApplications);
-ApplicationRouter.post("/upload", authenticationMiddleware(), authorizationMiddleware(roles, 'uploadFile'), getUploadMiddleware().single('file'), uploadFile);
+ApplicationRouter.post("/upload", authenticationMiddleware(), authorizationMiddleware(["job-seeker"], 'uploadFile'), getUploadMiddleware().single('file'), uploadFile);
 
 export default ApplicationRouter;

@@ -1,12 +1,15 @@
 import { Job } from "../models/Job";
+import { ApplicationService } from "./applicationService";
 import { User } from "../models/User";
 import { JobDTO } from "../dtos/jobDTO";
 import { sendEmail } from "../utils/emailService";
 import logger from '../config/logger';
 import { jobStatuses } from '../types';
 
+
 export class JobService {
     private frontend_host = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:3000';
+    private applicationService = new ApplicationService();
 
     // Create a new job
     async createJob(jobData: JobDTO, userId: number): Promise<Job> {
@@ -58,12 +61,47 @@ export class JobService {
         return { data, total, page, lastPage };
     }
 
+    // Get jobs  with pagination and applications that are related to the job
+    async getJobsWithApplications(page: number, limit: number): Promise<{ data: Job[]; total: number; page: number; lastPage: number }> {
+        const allJobs = await Job.find();
+        const total = allJobs.length;
+        const lastPage = Math.ceil(total / limit);
+        const start = (page - 1) * limit;
+        const data = allJobs.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(start, start + limit);
+
+        // Fetch applications for each job
+        for (const job of data) {
+            if (typeof job.id === 'number') {
+                job.applications = await this.applicationService.getApplicationsByJobId(job.id);
+            } else {
+                logger.warn(`Job id is undefined for job: ${JSON.stringify(job)}`);
+                job.applications = [];
+            }
+        }
+
+        return { data, total, page, lastPage };
+    }
+
     // Get job by id
     async getJobById(jobId: number): Promise<Job | null> {
         const job = await Job.findOne(jobId);
         if (!job) {
             logger.warn(`Job not found with id ${jobId}`);
             throw new Error('Job not found');
+        }
+        return job;
+    }
+
+    // Get job by title
+    async getJobByTitle(
+        title: string,
+        company: string,
+        location: string
+    ): Promise<Job | null> {
+        const job = await Job.findJobExistent(title, company, location);
+        if (!job) {
+            logger.warn(`Job not found with title ${title}`);
+            return null;
         }
         return job;
     }

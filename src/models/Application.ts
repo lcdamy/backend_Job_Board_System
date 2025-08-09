@@ -1,5 +1,6 @@
 import { applicationStatuses, JobApplicationInterface } from '../types';
 import { db } from '../config/db';
+import logger from '../config/logger';
 
 export class Application implements JobApplicationInterface {
     constructor(
@@ -10,7 +11,12 @@ export class Application implements JobApplicationInterface {
         public status: applicationStatuses,
         public appliedAt: Date,
         public updatedAt: Date,
-        public id?: number
+        public id?: number,
+        public phoneNumber?: string,
+        public email?: string,
+        public linkedInProfile?: string,
+        public jobTitle?: string,
+        public names?: string,
     ) { }
 
     static fromRow(row: any): Application {
@@ -22,15 +28,20 @@ export class Application implements JobApplicationInterface {
             row.status,
             new Date(row.appliedAt),
             new Date(row.updatedAt),
-            row.id
+            row.id,
+            row.phoneNumber,
+            row.email,
+            row.linkedInProfile,
+            row.jobTitle,
+            row.names,
         );
     }
 
     static async save(application: Application): Promise<Application> {
         return new Promise((resolve, reject) => {
             const stmt = `
-                INSERT INTO applications (jobId, userId, coverLetter, resumeURL, status, appliedAt, updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO applications (jobId, userId, coverLetter, resumeURL, status, appliedAt, updatedAt, phoneNumber, email, linkedInProfile, jobTitle, names)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             db.run(
                 stmt,
@@ -41,7 +52,12 @@ export class Application implements JobApplicationInterface {
                     application.resumeURL,
                     application.status,
                     application.appliedAt,
-                    application.updatedAt
+                    application.updatedAt,
+                    application.phoneNumber,
+                    application.email,
+                    application.linkedInProfile,
+                    application.jobTitle,
+                    application.names
                 ],
                 function (err) {
                     if (err) return reject(err);
@@ -108,6 +124,28 @@ export class Application implements JobApplicationInterface {
             db.run(`DELETE FROM applications WHERE id = ?`, [id], function (err) {
                 if (err) return reject(err);
                 resolve(this.changes > 0);
+            });
+        });
+    }
+
+    static async findApplicationByJobSeeker(jobId: number, userId: number): Promise<Application | null> {
+        return new Promise((resolve, reject) => {
+            db.all(`SELECT * FROM applications WHERE jobId = ? AND userId = ?`, [jobId, userId], (err, rows) => {
+                if (err) return reject(err);
+                if (rows.length === 0) {
+                    logger.warn(`No applications found for jobId ${jobId} and userId ${userId}`);
+                    return resolve(null);
+                }
+                resolve(Application.fromRow(rows[0]));
+            });
+        });
+    }
+
+    static async getApplicationsByJobId(jobId: number): Promise<Application[]> {
+        return new Promise((resolve, reject) => {
+            db.all(`SELECT * FROM applications WHERE jobId = ?`, [jobId], (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows.map(Application.fromRow));
             });
         });
     }

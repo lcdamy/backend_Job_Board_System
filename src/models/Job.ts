@@ -1,5 +1,6 @@
-import { JobInterface, jobStatuses, jobTypes } from '../types';
+import { JobInterface, jobStatuses, jobTypes, JobApplicationInterface } from '../types';
 import { db } from '../config/db';
+
 
 export class Job implements JobInterface {
     constructor(
@@ -13,7 +14,8 @@ export class Job implements JobInterface {
         public postedBy: number,
         public createdAt: Date,
         public updatedAt: Date,
-        public id?: number
+        public id?: number,
+        public applications?: JobApplicationInterface[] // Optional field to hold applications related to the job
     ) { }
 
     static fromRow(row: any): Job {
@@ -28,7 +30,8 @@ export class Job implements JobInterface {
             row.postedBy,
             new Date(row.createdAt),
             new Date(row.updatedAt),
-            row.id
+            row.id,
+            row.applications ? JSON.parse(row.applications) : []
         );
     }
 
@@ -112,6 +115,16 @@ export class Job implements JobInterface {
         });
     }
 
+    static async findJobExistent(title: string, company: string, location: string): Promise<Job | null> {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT * FROM jobs WHERE title = ? AND company = ? AND location = ?`, [title, company, location], (err, row) => {
+                if (err) return reject(err);
+                if (!row) return resolve(null);
+                resolve(Job.fromRow(row));
+            });
+        });
+    }
+
     static async delete(id: number): Promise<boolean> {
         return new Promise((resolve, reject) => {
             db.run(`DELETE FROM jobs WHERE id = ?`, [id], function (err) {
@@ -120,4 +133,5 @@ export class Job implements JobInterface {
             });
         });
     }
+
 }

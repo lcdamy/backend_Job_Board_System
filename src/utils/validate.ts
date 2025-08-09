@@ -121,10 +121,10 @@ export const jobValidationSchema = Joi.object({
 export const applicationValidationSchema = Joi.object({
     jobId: numberField('Job ID'),
     userId: numberField('User ID'),
-    coverLetter: createStringField(10, 'Cover letter'),
+    coverLetter: uriField('Cover Letter URL'),
     resumeURL: uriField('Resume URL'),
     jobTitle: Joi.string().optional(),
-    userName: Joi.string().optional(),
+    names: Joi.string().optional(),
     userEmail: Joi.string().email().optional(),
     phoneNumber: phoneNumberField.optional(),
     email: Joi.string().email().optional(),

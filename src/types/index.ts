@@ -25,7 +25,6 @@ export enum jobTypes {
 };
 
 export enum applicationStatuses {
-    Applied = "applied",
     UnderReview = "under-review",
     InterviewScheduled = "interview-scheduled",
     OfferMade = "offer-made",
@@ -92,6 +91,5 @@ export interface JobApplicationInterface {
     appliedAt: Date;
     updatedAt: Date;
     jobTitle?: string;
-    userName?: string;
-    userEmail?: string;
+    names?: string;
 }

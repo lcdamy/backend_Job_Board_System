@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { JobService } from '../services/jobService';
+import { ApplicationService } from '../services/applicationService';
 import { StatusCodes } from "http-status-codes";
 import { formatResponse } from "../utils/helper";
 import { JobDTO } from '../dtos/jobDTO';
@@ -16,6 +17,7 @@ declare global {
 }
 
 const jobService = new JobService();
+const applicationService = new ApplicationService();
 
 export const createJob = async (req: Request, res: Response) => {
     try {
@@ -32,6 +34,15 @@ export const createJob = async (req: Request, res: Response) => {
         if (!userId) {
             logger.error('User ID not found in request');
             return res.status(StatusCodes.UNAUTHORIZED).json(formatResponse('error', 'User not authenticated'));
+        }
+
+        //check if the job already exists by checking the title and company
+        logger.info(`Checking if job with title "${jobData.title}" already exists`);
+        const existingJob = await jobService.getJobByTitle(jobData.title, jobData.company, jobData.location);
+
+        if (existingJob) {
+            logger.warn(`Job with title "${jobData.title}" already exists`);
+            return res.status(StatusCodes.CONFLICT).json(formatResponse('error', 'Job with this title already exists'));
         }
 
         const newJob = await jobService.createJob(jobData, userId);
@@ -55,6 +66,21 @@ export const getAllJobs = async (req: Request, res: Response) => {
         return res.status(StatusCodes.OK).json(formatResponse("success", "Jobs retrieved successfully", jobs));
     } catch (error) {
         logger.error(`Error retrieving jobs: ${(error as Error).message}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse("error", (error as Error).message));
+    }
+};
+
+export const getJobsWithApplications = async (req: Request, res: Response) => {
+    try {
+        logger.info('Received request to get jobs with applications');
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const jobs = await jobService.getJobsWithApplications(page, limit);
+        logger.info(`Retrieved jobs with applications`);
+
+        return res.status(StatusCodes.OK).json(formatResponse("success", "Jobs with applications retrieved successfully", jobs));
+    } catch (error) {
+        logger.error(`Error retrieving jobs with applications: ${(error as Error).message}`);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse("error", (error as Error).message));
     }
 };
@@ -108,6 +134,13 @@ export const deleteJob = async (req: Request, res: Response) => {
     try {
         const jobId = parseInt(req.params.id);
         logger.info(`Received request to delete job with ID: ${jobId}`);
+
+        //check if on the job someone has applied
+        const applications = await applicationService.getApplicationsByJobId(jobId);
+        if (applications.length > 0) {
+            logger.warn(`Job with ID ${jobId} has applications and cannot be deleted`);
+            return res.status(StatusCodes.FORBIDDEN).json(formatResponse("error", "Job has applications and cannot be deleted"));
+        }
 
         const deleted = await jobService.deleteJob(jobId);
         if (!deleted) {
