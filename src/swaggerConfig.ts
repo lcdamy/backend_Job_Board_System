@@ -3,7 +3,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 const getServerUrl = () => {
     const host = process.env.HOST || 'localhost';
     const port = process.env.PORT || 4000;
-    if (host === 'https://backend-isco-challenge.onrender.com') {
+    if (host === 'https://backend-job-board-system.onrender.com') {
         return host;
     }
     return `http://${host}:${port}`;
