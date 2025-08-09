@@ -12,20 +12,31 @@ export class TestHelper {
   static async cleanDatabase(): Promise<void> {
     // Clean all test data from tables while preserving schema
     return new Promise((resolve, reject) => {
+      if (!db) {
+        resolve();
+        return;
+      }
+      
       db.serialize(() => {
-        db.run('DELETE FROM applications', (err) => {
-          if (err) console.warn('Error cleaning applications:', err.message);
-        });
-        db.run('DELETE FROM jobs', (err) => {
-          if (err) console.warn('Error cleaning jobs:', err.message);
-        });
-        db.run('DELETE FROM users', (err) => {
-          if (err) console.warn('Error cleaning users:', err.message);
-        });
-        db.run('DELETE FROM audit_logs', (err) => {
-          if (err) console.warn('Error cleaning audit_logs:', err.message);
-          resolve();
-        });
+        let pendingOperations = 4;
+        let hasError = false;
+        
+        const handleComplete = (err?: any) => {
+          if (err && !hasError) {
+            hasError = true;
+            reject(err);
+            return;
+          }
+          pendingOperations--;
+          if (pendingOperations === 0 && !hasError) {
+            resolve();
+          }
+        };
+        
+        db.run('DELETE FROM applications', handleComplete);
+        db.run('DELETE FROM jobs', handleComplete);
+        db.run('DELETE FROM users', handleComplete);
+        db.run('DELETE FROM audit_logs', handleComplete);
       });
     });
   }

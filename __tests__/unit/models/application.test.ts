@@ -7,8 +7,12 @@ describe('Application Model', () => {
         await TestHelper.setupTestDatabase();
     });
 
+    beforeEach(async () => {
+        await TestHelper.cleanDatabase();
+    });
+
     afterAll(async () => {
-        await TestHelper.cleanupTestDatabase();
+        await TestHelper.closeDatabase();
     });
 
     describe('Application model functions', () => {

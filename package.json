@@ -12,7 +12,7 @@
     "db:reset": "if exist data\\database.sqlite del data\\database.sqlite && npm run dev",
     "db:fresh": "if exist data\\database.sqlite del data\\database.sqlite && npm run migrate && npm run seed",
     "test": "jest",
-    "test:ci": "cross-env CI=true jest --passWithNoTests --silent --ci --coverage --watchAll=false",
+    "test:ci": "jest --ci --coverage --watchAll=false --maxWorkers=1",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:unit": "jest --testPathPattern=unit",

@@ -7,8 +7,12 @@ describe('AuditLog Model', () => {
         await TestHelper.setupTestDatabase();
     });
 
+    beforeEach(async () => {
+        await TestHelper.cleanDatabase();
+    });
+
     afterAll(async () => {
-        await TestHelper.cleanupTestDatabase();
+        await TestHelper.closeDatabase();
     });
 
     describe('AuditLog model functions', () => {

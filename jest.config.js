@@ -22,17 +22,18 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup.ts'],
-  testTimeout: 10000,
-  verbose: !process.env.CI,
-  silent: process.env.CI === 'true',
+  testTimeout: 30000,
+  verbose: false,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
-  // Ensure tests run sequentially in CI for database consistency
-  maxWorkers: process.env.CI ? 1 : '50%',
+  // Run tests sequentially to avoid database conflicts
+  maxWorkers: 1,
   // Force exit after tests complete
   forceExit: true,
   // Clear mocks between tests
   clearMocks: true,
-  restoreMocks: true
+  restoreMocks: true,
+  // Detect open handles
+  detectOpenHandles: true
 };
