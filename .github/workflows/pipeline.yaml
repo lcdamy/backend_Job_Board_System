@@ -20,6 +20,9 @@ jobs:
       - name: install packages
         run: npm install
 
+      - name: run tests
+        run: npm test
+
       - name: build docker image
         run: docker build -t lcdamy/backend-isco-challenge:1.0 ./
 

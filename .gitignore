@@ -40,3 +40,5 @@ public/
 # database files
 data/*
 data/database.sqlite
+data/database.sqlite-journal
+data/test_database.sqlite

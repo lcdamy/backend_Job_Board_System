@@ -11,7 +11,11 @@
     "seed": "ts-node src/seeds/seedFirstAdmin.ts",
     "db:reset": "if exist data\\database.sqlite del data\\database.sqlite && npm run dev",
     "db:fresh": "if exist data\\database.sqlite del data\\database.sqlite && npm run migrate && npm run seed",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration"
   },
   "keywords": [],
   "author": "",
@@ -43,13 +47,18 @@
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
     "@types/http-errors": "^2.0.4",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.17.1",
     "@types/nodemailer": "^6.4.17",
     "@types/sqlite3": "^3.1.11",
+    "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "jest": "^29.4.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.4.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
   }
