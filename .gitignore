@@ -39,3 +39,4 @@ public/
 
 # database files
 data/*
+data/database.sqlite
