@@ -13,15 +13,35 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       deployments: write
+    
+    env:
+      NODE_ENV: test
+      DATABASE_URL: ":memory:"
+      
     steps:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Create necessary directories
+        run: |
+          mkdir -p data
+          mkdir -p __tests__/data
+
       - name: install packages
-        run: npm install
+        run: npm ci
 
       - name: run tests
-        run: npm test
+        run: npm run test:ci
+        env:
+          CI: true
+          NODE_ENV: test
+          DATABASE_URL: ":memory:"
 
       - name: build docker image
         run: docker build -t lcdamy/backend-isco-challenge:1.0 ./

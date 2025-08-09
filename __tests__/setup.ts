@@ -6,7 +6,18 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.test') });
 
 // Set NODE_ENV to test
 process.env.NODE_ENV = 'test';
-process.env.DATABASE_URL = '../../data/test_database.sqlite';
+
+// Use in-memory database for CI environment, file database for local testing
+if (process.env.CI) {
+  process.env.DATABASE_URL = ':memory:';
+} else {
+  process.env.DATABASE_URL = path.resolve(__dirname, '../data/test_database.sqlite');
+}
+
+// Mock email service to prevent actual emails in tests
+jest.mock('../src/utils/emailService', () => ({
+  sendEmail: jest.fn().mockResolvedValue(true)
+}));
 
 // Global test setup
 beforeAll(async () => {

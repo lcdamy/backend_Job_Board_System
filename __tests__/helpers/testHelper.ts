@@ -33,19 +33,26 @@ export class TestHelper {
   static async closeDatabase(): Promise<void> {
     // Close database connection
     return new Promise((resolve) => {
-      db.close((err) => {
-        if (err) {
-          console.error('Error closing database:', err.message);
-        }
+      if (db) {
+        db.close((err) => {
+          if (err) {
+            console.error('Error closing database:', err.message);
+          }
+          resolve();
+        });
+      } else {
         resolve();
-      });
+      }
     });
   }
 
   static async cleanupTestDatabase(): Promise<void> {
-    const testDbPath = path.resolve(__dirname, '../data/test_database.sqlite');
-    if (fs.existsSync(testDbPath)) {
-      fs.unlinkSync(testDbPath);
+    // Only try to delete file if not using in-memory database
+    if (process.env.DATABASE_URL !== ':memory:') {
+      const testDbPath = path.resolve(__dirname, '../../data/test_database.sqlite');
+      if (fs.existsSync(testDbPath)) {
+        fs.unlinkSync(testDbPath);
+      }
     }
   }
 
