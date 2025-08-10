@@ -133,4 +133,15 @@ export class JobService {
         logger.info(`Job deleted with id ${jobId}`);
         return deleted;
     }
+
+    // Update jobs by deadline
+    async updateJobsByDeadline(): Promise<void> {
+        const now = new Date();
+        const expiredJobs = await Job.findDeadline({ deadline: { $lt: now }, status: 'open' });
+        for (const job of expiredJobs) {
+            job.status = jobStatuses.Closed;
+            await Job.save(job);
+            logger.info(`Job closed due to deadline expiration: ${job.id}`);
+        }
+    }
 }

@@ -6,7 +6,6 @@ import { sendEmail } from "../utils/emailService";
 import { generateRandomPassword } from "../utils/helper";
 import { userStatuses, UserType, RegistrationType } from "../types";
 import { createTablesIfNotExist } from './init';
-import logger from '../config/logger';
 
 /**
  * Check if database file exists

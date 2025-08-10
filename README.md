@@ -42,7 +42,7 @@ To start the server in development mode:
     ```bash
     cp .env.example .env
     ```
-    > **Note:** If you do not have access to the `.env.example` file, request a sample by emailing your-email@example.com.
+    > **Note:** If you do not have access to the `.env.example` file, request a sample by emailing zudanga@gmail.com.
 
 2. Start the server:
 
@@ -71,18 +71,26 @@ To seed the database, use:
 npm run seed
 ```
 
+## 🧪 Running Tests
+
+To run unit tests, use:
+```bash
+npm run test
+```
+
 > **Note:** Built files will be in the `dist` directory.
 
 ## 📁 Folder Structure
 
 ```
 backend_job_board_system/
-├── public/
+├── __tests__/
+├── .github/
+├── data/
 ├── src/
-│   ├── assets/         # Mock data
 │   ├── config/         # Database config & logger
 │   ├── controllers/    # Handles incoming requests and responses
-│   ├── cronjobs/       # Scheduled tasks (e.g., health checks)
+│   ├── cronjobs/       # Scheduled tasks (e.g., update the status of job to close once deadline is passed)
 │   ├── dtos/           # TypeScript DTOs
 │   ├── middlewares/    # Request interception and custom logic
 │   ├── models/         # System schemas
@@ -92,12 +100,15 @@ backend_job_board_system/
 │   ├── templates/      # Email or other templates
 │   ├── utils/          # Utility functions and helpers
 │   └── app.ts          # Main application entry point
+│   └── swagger.ts      # Main application entry point
 ├── .env                # Environment variables
 ├── .gitignore          # Git ignore rules
 ├── combined.log        # Log output file
 ├── docker-compose.yml  # Docker Compose configuration
 ├── Dockerfile          # Docker build instructions
+├── jest.config         # Jest configuration
 ├── package.json        # Project metadata and dependencies
+└── TESTING_README.md   # Unit testing readme 
 └── README.md
 ```
 
@@ -123,4 +134,4 @@ To run this application using Docker:
 
 ## 👥 Contributors
 
-- [yourusername](https://www.linkedin.com/in/your-linkedin-profile/)
+- [lcdamy](https://www.linkedin.com/in/pierre-damien-murindangabo-cyuzuzo-709b53151)

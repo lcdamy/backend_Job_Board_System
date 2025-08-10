@@ -134,4 +134,13 @@ export class Job implements JobInterface {
         });
     }
 
+    static async findDeadline(criteria: any): Promise<Job[]> {
+        return new Promise((resolve, reject) => {
+            db.all(`SELECT * FROM jobs WHERE deadline < ? AND status = ?`, [criteria.deadline, criteria.status], (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows.map(Job.fromRow));
+            });
+        });
+    }
+
 }
