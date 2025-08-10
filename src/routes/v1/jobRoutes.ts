@@ -250,7 +250,7 @@
  *         description: Unauthorized
  *       403:
  *         description: Forbidden
- */  
+ */
 
 
 import { Router } from "express";
@@ -273,7 +273,7 @@ jobRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(ro
 jobRouter.get('/detail/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'getJobById'), getJobById);
 jobRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'updateJob'), updateJob);
 jobRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'deleteJob'), deleteJob);
-jobRouter.get('/list', authenticationMiddleware(), authorizationMiddleware(roles, 'getAllJobs'), getAllJobs);
+jobRouter.get('/list', getAllJobs);
 jobRouter.get('/list-with-applications', authenticationMiddleware(), authorizationMiddleware(roles, 'getJobsWithApplications'), getJobsWithApplications);
 
 export default jobRouter;
