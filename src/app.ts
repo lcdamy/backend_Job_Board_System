@@ -16,7 +16,6 @@ import routes from './routes';
 
 dotenv.config();
 
-
 const port = process.env.PORT || 3001;
 const host = process.env.HOST || 'localhost';
 const frontendHost = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -28,7 +27,7 @@ const allowedOrigins = [frontendHost];
 
 const configureMiddlewares = () => {
     app.use(express.json());
-    // app.use(cors({ origin: '*' }));
+    app.use(cors({ origin: '*' }));
     app.use(cors({
         origin: allowedOrigins,
         credentials: true,
