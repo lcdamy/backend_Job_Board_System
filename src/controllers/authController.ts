@@ -249,6 +249,19 @@ export const resetPassword = async (req: Request, res: Response): Promise<Respon
     }
 };
 
+export const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const users = await authService.getAllUsers(page, limit);
+        return res.status(StatusCodes.OK).json(formatResponse('success', 'Users retrieved successfully', users));
+    } catch (err) {
+        const errorMessage = (err as Error).message;
+        logger.error(`Error retrieving users: ${errorMessage}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse('error', (err as Error).message, err));
+    }
+};
+
 const sendWelcomeEmail = async (user: any, role: string, type: string) => {
     const frontend_host = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:3000';
     const context = {

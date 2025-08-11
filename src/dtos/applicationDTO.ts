@@ -7,7 +7,7 @@ export interface ApplicationDTO {
     resumeURL: string;
     status: applicationStatuses;
     phoneNumber?: string;
-    email?: string;
+    email: string;
     linkedInProfile?: string;
     appliedAt: Date;
     updatedAt: Date;

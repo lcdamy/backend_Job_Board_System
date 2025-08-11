@@ -81,7 +81,6 @@ export interface JobInterface {
 export interface JobApplicationInterface {
     id?: number;
     jobId: number;
-    userId: number;
     coverLetter: string;
     resumeURL: string;
     status: applicationStatuses;

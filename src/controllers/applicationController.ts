@@ -31,17 +31,7 @@ export const createApplication = async (req: Request, res: Response) => {
             logger.error(`Validation error: ${error.details[0].message}`);
             return res.status(StatusCodes.BAD_REQUEST).json(formatResponse('error', error.details[0].message));
         }
-        const userId = req.user?.id;
-        if (!userId) {
-            logger.error('User ID not found in request');
-            return res.status(StatusCodes.UNAUTHORIZED).json(formatResponse('error', 'User not authenticated'));
-        }
-        //check if user exists
-        const user = await authService.findUserById(applicationData.userId);
-        if (!user) {
-            logger.error(`User not found with id ${applicationData.userId}`);
-            return res.status(StatusCodes.NOT_FOUND).json(formatResponse('error', 'User not found'));
-        }
+
         //check if job exists
         const jobExists = await jobService.getJobById(applicationData.jobId);
         if (!jobExists) {
@@ -49,9 +39,9 @@ export const createApplication = async (req: Request, res: Response) => {
             return res.status(StatusCodes.NOT_FOUND).json(formatResponse('error', 'Job not found'));
         }
         //check if user has already applied for the job
-        const existingApplication = await applicationService.getApplicationByJobAndUser(applicationData.jobId, userId);
+        const existingApplication = await applicationService.getApplicationByJobAndUser(applicationData.jobId, applicationData.email);
         if (existingApplication) {
-            logger.warn(`User with ID ${userId} has already applied for job with ID ${applicationData.jobId}`);
+            logger.warn(`User with email ${applicationData.email} has already applied for job with ID ${applicationData.jobId}`);
             return res.status(StatusCodes.CONFLICT).json(formatResponse('error', 'You have already applied for this job'));
         }
         // check if the deadline for the job has passed
@@ -61,7 +51,7 @@ export const createApplication = async (req: Request, res: Response) => {
             return res.status(StatusCodes.BAD_REQUEST).json(formatResponse('error', 'Application for this job is closed'));
         }
 
-        const newApplication = await applicationService.createApplication(applicationData, userId);
+        const newApplication = await applicationService.createApplication(applicationData);
         logger.info(`Application created with ID: ${newApplication.id}`);
         return res.status(StatusCodes.CREATED).json(formatResponse("success", "Application submitted successfully", newApplication));
     } catch (error) {

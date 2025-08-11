@@ -1,5 +1,4 @@
 import { Application } from "../models/Application";
-import { User } from "../models/User";
 import { Job } from "../models/Job";
 import { sendEmail } from "../utils/emailService";
 import logger from '../config/logger';
@@ -12,16 +11,10 @@ export class ApplicationService {
     private backend_host = process.env.BACKEND_URL ? process.env.BACKEND_URL : 'http://localhost:3001';
 
     // Create a new application
-    async createApplication(applicationData: ApplicationDTO, userId: number): Promise<Application> {
-        const user = await User.findOne(userId);
-        if (!user) {
-            logger.error(`Application creation failed: User not found with id ${userId}`);
-            throw new Error('User not found');
-        }
+    async createApplication(applicationData: ApplicationDTO): Promise<Application> {
 
         const newApplication = new Application(
             applicationData.jobId,
-            userId,
             applicationData.coverLetter,
             applicationData.resumeURL,
             applicationStatuses.Pending, // Default status
@@ -32,7 +25,7 @@ export class ApplicationService {
             applicationData.email,
             applicationData.linkedInProfile,
             applicationData.jobTitle,
-            user.names // Assuming names is the user's name
+            applicationData.names
         );
 
         const savedApplication = await Application.save(newApplication);
@@ -47,16 +40,16 @@ export class ApplicationService {
             year: new Date().getFullYear(),
             logo_url: process.env.LOGO_URL,
             subject: 'Application Submitted Successfully',
-            name: user.names,
+            name: applicationData.names,
             message: `Your application for job titled "${job.title}" has been submitted. We will review your application and contact you if your resume matches our desired qualifications.`,
             link: `${this.frontend_host}/login`,
             link_label: 'Log in to your account'
         };
-        if (user.email) {
-            sendEmail('email_template', 'Application submission', user.email, context);
+        if (applicationData.email) {
+            sendEmail('email_template', 'Application submission', applicationData.email, context);
         }
 
-        logger.info(`Application created successfully with id ${savedApplication.id} by user ${userId}`);
+        logger.info(`Application created successfully with id ${savedApplication.id}`);
         return savedApplication;
     }
 
@@ -134,10 +127,10 @@ export class ApplicationService {
     }
 
     // Get application by job and user
-    async getApplicationByJobAndUser(jobId: number, userId: number): Promise<Application | null> {
-        const application = await Application.findApplicationByJobSeeker(jobId, userId);
+    async getApplicationByJobAndUser(jobId: number, email: string): Promise<Application | null> {
+        const application = await Application.findApplicationByJobSeeker(jobId, email);
         if (!application) {
-            logger.warn(`No application found for jobId ${jobId} and userId ${userId}`);
+            logger.warn(`No application found for jobId ${jobId} and email ${email}`);
             return null;
         }
         return application;

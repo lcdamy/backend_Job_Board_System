@@ -5,7 +5,6 @@ import logger from '../config/logger';
 export class Application implements JobApplicationInterface {
     constructor(
         public jobId: number,
-        public userId: number,
         public coverLetter: string,
         public resumeURL: string,
         public status: applicationStatuses,
@@ -22,7 +21,6 @@ export class Application implements JobApplicationInterface {
     static fromRow(row: any): Application {
         return new Application(
             row.jobId,
-            row.userId,
             row.coverLetter,
             row.resumeURL,
             row.status,
@@ -40,14 +38,13 @@ export class Application implements JobApplicationInterface {
     static async save(application: Application): Promise<Application> {
         return new Promise((resolve, reject) => {
             const stmt = `
-                INSERT INTO applications (jobId, userId, coverLetter, resumeURL, status, appliedAt, updatedAt, phoneNumber, email, linkedInProfile, jobTitle, names)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO applications (jobId, coverLetter, resumeURL, status, appliedAt, updatedAt, phoneNumber, email, linkedInProfile, jobTitle, names)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             db.run(
                 stmt,
                 [
                     application.jobId,
-                    application.userId,
                     application.coverLetter,
                     application.resumeURL,
                     application.status,
@@ -128,12 +125,12 @@ export class Application implements JobApplicationInterface {
         });
     }
 
-    static async findApplicationByJobSeeker(jobId: number, userId: number): Promise<Application | null> {
+    static async findApplicationByJobSeeker(jobId: number, email: string): Promise<Application | null> {
         return new Promise((resolve, reject) => {
-            db.all(`SELECT * FROM applications WHERE jobId = ? AND userId = ?`, [jobId, userId], (err, rows) => {
+            db.all(`SELECT * FROM applications WHERE jobId = ? AND email = ?`, [jobId, email], (err, rows) => {
                 if (err) return reject(err);
                 if (rows.length === 0) {
-                    logger.warn(`No applications found for jobId ${jobId} and userId ${userId}`);
+                    logger.warn(`No applications found for jobId ${jobId} and email ${email}`);
                     return resolve(null);
                 }
                 resolve(Application.fromRow(rows[0]));

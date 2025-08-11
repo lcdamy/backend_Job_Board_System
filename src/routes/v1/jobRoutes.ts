@@ -42,8 +42,6 @@
  *   get:
  *     summary: Get job details by ID
  *     tags: [Jobs]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -166,8 +164,6 @@
  *   get:
  *     summary: Get a list of all jobs
  *     tags: [Jobs]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
@@ -270,7 +266,7 @@ const jobRouter = Router();
 const roles = ["admin"];
 
 jobRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(roles, 'createJob'), createJob);
-jobRouter.get('/detail/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'getJobById'), getJobById);
+jobRouter.get('/detail/:id', getJobById);
 jobRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'updateJob'), updateJob);
 jobRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'deleteJob'), deleteJob);
 jobRouter.get('/list', getAllJobs);

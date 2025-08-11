@@ -345,6 +345,89 @@
  *                   example: "Invalid email or user not found"
  */
 
+/**
+ * @swagger
+ * /api/v1/auth/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 message:
+ *                   type: string
+ *                   example: "Users retrieved successfully"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: "5f7b44d1-8e6b-4384-8516-27d1b6bc2353"
+ *                       names:
+ *                         type: string
+ *                         example: "Pierre damien"
+ *                       email:
+ *                         type: string
+ *                         example: "johndoe@gmail.com"
+ *                       type:
+ *                         type: string
+ *                         example: "admin"
+ *                       registrationType:
+ *                         type: string
+ *                         example: "manual"
+ *                       profilePictureURL:
+ *                         type: string
+ *                         example: "https://example.com/profile.jpg"
+ *                       isActive:
+ *                         type: boolean
+ *                         example: true
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-02-17T06:37:45.592Z"
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-02-17T06:37:45.592Z"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Forbidden"
+ */
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -356,8 +439,13 @@ const {
     activateAccount,
     forgotPassword,
     resetPassword,
-    getTokenByEmail
+    getTokenByEmail,
+    getAllUsers
 } = require("../../controllers/authController");
+
+const { authorizationMiddleware } = require("../../middlewares/authorizationMiddleware");
+const { authenticationMiddleware } = require("../../middlewares/authenticationMiddleware");
+const roles = ["admin"];
 
 const authRouter = Router();
 
@@ -367,6 +455,8 @@ authRouter.get("/activate/:token", activateAccount);
 authRouter.post("/forgot-password", forgotPassword);
 authRouter.post("/reset-password", resetPassword);
 authRouter.post("/social-token", getTokenByEmail);
+authRouter.get("/users", authenticationMiddleware(), authorizationMiddleware(roles, 'getAllUsers'), getAllUsers);
+
 
 
 

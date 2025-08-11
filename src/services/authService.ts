@@ -184,4 +184,17 @@ export class AuthService {
         await User.update(user.id!, { password: hashedPassword, userStatus: userStatuses.Active });
         logger.info(`Password reset successfully for email ${decoded.email}`);
     }
+
+    // get all users
+    async getAllUsers(page: number, limit: number): Promise<{ data: Omit<User, 'password'>[]; total: number; page: number; lastPage: number }> {
+        const allUsers = await User.find();
+        const total = allUsers.length;
+        const lastPage = Math.ceil(total / limit);
+        const start = (page - 1) * limit;
+        const data = allUsers
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+            .slice(start, start + limit)
+            .map(({ password, ...rest }) => rest);
+        return { data, total, page, lastPage };
+    }
 }

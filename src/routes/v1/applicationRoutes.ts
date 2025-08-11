@@ -5,8 +5,6 @@
  *   post:
  *     summary: Create a new application
  *     tags: [Job Applications]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -260,6 +258,38 @@
  *                     example: "pending"
  */
 
+/**
+ * @swagger
+ * /api/v1/application/upload:
+ *   post:
+ *     summary: Upload a file for a job application
+ *     tags: [Job Applications]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: File uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 message:
+ *                   type: string
+ *                   example: "File uploaded"
+ */
+
 import { Router } from "express";
 const {
     createApplication,
@@ -277,11 +307,11 @@ const { getUploadMiddleware } = require("../../middlewares/bucket");
 const ApplicationRouter = Router();
 const roles = ["admin", "job-seeker"];
 
-ApplicationRouter.post('/create', authenticationMiddleware(), authorizationMiddleware(["job-seeker"], 'createApplication'), createApplication);
+ApplicationRouter.post('/create', createApplication);
 ApplicationRouter.get('/detail/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'getApplicationById'), getApplicationById);
 ApplicationRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'updateApplication'), updateApplication);
 ApplicationRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'deleteApplication'), deleteApplication);
 ApplicationRouter.get('/list', authenticationMiddleware(), authorizationMiddleware(roles, 'getAllApplications'), getAllApplications);
-ApplicationRouter.post("/upload", authenticationMiddleware(), authorizationMiddleware(["job-seeker"], 'uploadFile'), getUploadMiddleware().single('file'), uploadFile);
+ApplicationRouter.post("/upload", getUploadMiddleware().single('file'), uploadFile);
 
 export default ApplicationRouter;
