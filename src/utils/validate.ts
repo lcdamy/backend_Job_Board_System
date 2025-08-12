@@ -120,9 +120,20 @@ export const jobValidationSchema = Joi.object({
 
 export const applicationValidationSchema = Joi.object({
     jobId: numberField('Job ID'),
-    userId: numberField('User ID'),
-    coverLetter: uriField('Cover Letter URL'),
-    resumeURL: uriField('Resume URL'),
+    coverLetter: Joi.string()
+        .pattern(/^https?:\/\/.+\/.+\.(pdf|doc|docx)$/i)
+        .required()
+        .messages({
+            'string.pattern.base': 'Cover Letter URL must be a valid URL pointing to a PDF, DOC, or DOCX file',
+            'any.required': requiredFieldMessage('Cover Letter URL')
+        }),
+    resumeURL: Joi.string()
+        .pattern(/^https?:\/\/.+\/.+\.(pdf|doc|docx)$/i)
+        .required()
+        .messages({
+            'string.pattern.base': 'Resume URL must be a valid URL pointing to a PDF, DOC, or DOCX file',
+            'any.required': requiredFieldMessage('Resume URL')
+        }),
     jobTitle: Joi.string().optional(),
     names: Joi.string().optional(),
     userEmail: Joi.string().email().optional(),

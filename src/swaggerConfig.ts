@@ -229,10 +229,6 @@ const options: swaggerJsdoc.Options = {
                             type: 'integer',
                             example: 1
                         },
-                        userId: {
-                            type: 'integer',
-                            example: 1
-                        },
                         coverLetter: {
                             type: 'string',
                             example: 'I am very interested in this position...'

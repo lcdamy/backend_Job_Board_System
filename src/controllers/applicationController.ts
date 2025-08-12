@@ -120,15 +120,10 @@ export const uploadFile = async (req: Request, res: Response): Promise<Response>
             return res.status(StatusCodes.BAD_REQUEST).json(formatResponse('error', 'No file uploaded'));
         }
 
-        if (!req.user) {
-            logger.warn('User not authenticated', { user: req.user });
-            return res.status(StatusCodes.UNAUTHORIZED).json(formatResponse('error', 'User not authenticated'));
-        }
-
         const file = req.file;
 
-        if (!file || file.mimetype !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-            throw new Error('Invalid file type. Please upload a valid .xlsx file.');
+        if (!file) {
+            throw new Error('Invalid file type. Please upload a valid file.');
         }
         const experts = await applicationService.uploadUsersFile(file);
         if (!experts) {

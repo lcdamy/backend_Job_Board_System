@@ -15,9 +15,6 @@
  *               jobId:
  *                 type: integer
  *                 example: 123
- *               userId:
- *                 type: integer
- *                 example: 456
  *               coverLetter:
  *                 type: string
  *                 format: uri
@@ -87,8 +84,6 @@
  *                 _id:
  *                   type: string
  *                 jobId:
- *                   type: string
- *                 userId:
  *                   type: string
  *                 coverLetter:
  *                   type: string
@@ -247,8 +242,6 @@
  *                     type: string
  *                   jobId:
  *                     type: string
- *                   userId:
- *                     type: string
  *                   coverLetter:
  *                     type: string
  *                   resume:
@@ -312,6 +305,7 @@ ApplicationRouter.get('/detail/:id', authenticationMiddleware(), authorizationMi
 ApplicationRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'updateApplication'), updateApplication);
 ApplicationRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(["admin"], 'deleteApplication'), deleteApplication);
 ApplicationRouter.get('/list', authenticationMiddleware(), authorizationMiddleware(roles, 'getAllApplications'), getAllApplications);
+// Public upload endpoint (no authentication)
 ApplicationRouter.post("/upload", getUploadMiddleware().single('file'), uploadFile);
 
 export default ApplicationRouter;

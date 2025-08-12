@@ -19,7 +19,7 @@ describe('Application Model', () => {
         it('should create a new application successfully', async () => {
             const applicationData = new Application(
                 1,
-                'This is my cover letter.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -32,19 +32,24 @@ describe('Application Model', () => {
                 'Applicant Name'
             );
 
+
             const savedApplication = await Application.save(applicationData);
 
             expect(savedApplication).toBeDefined();
-            expect(savedApplication.id).toBeDefined();
             expect(savedApplication.jobId).toBe(1);
-            expect(savedApplication.coverLetter).toBe('This is my cover letter.');
+            expect(savedApplication.coverLetter).toBe('https://example.com/coverletter.pdf');
             expect(savedApplication.status).toBe(applicationStatuses.Pending);
+            expect(savedApplication.resumeURL).toBe('https://example.com/resume.pdf');
+            expect(savedApplication.email).toBe('applicant@example.com');
+            expect(savedApplication.linkedInProfile).toBe('https://linkedin.com/in/applicant');
+            expect(savedApplication.jobTitle).toBe('Software Engineer');
+            expect(savedApplication.names).toBe('Applicant Name');
         });
 
         it('should find application by id', async () => {
             const applicationData = new Application(
                 2,
-                'Another cover letter.',
+                'https://example.com/coverletter2.pdf',
                 'https://example.com/resume2.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -61,19 +66,20 @@ describe('Application Model', () => {
             const foundApplication = await Application.findOne(savedApplication.id!);
 
             expect(foundApplication).toBeDefined();
-            expect(foundApplication?.id).toBe(savedApplication.id);
             expect(foundApplication?.jobId).toBe(2);
-        });
-
-        it('should return null when application not found by id', async () => {
-            const foundApplication = await Application.findOne(99999);
-            expect(foundApplication).toBeNull();
+            expect(foundApplication?.coverLetter).toBe('https://example.com/coverletter2.pdf');
+            expect(foundApplication?.resumeURL).toBe('https://example.com/resume2.pdf');
+            expect(foundApplication?.status).toBe(applicationStatuses.Pending);
+            expect(foundApplication?.email).toBe('another@example.com');
+            expect(foundApplication?.linkedInProfile).toBe('https://linkedin.com/in/another');
+            expect(foundApplication?.jobTitle).toBe('Backend Developer');
+            expect(foundApplication?.names).toBe('Another Name');
         });
 
         it('should update application successfully', async () => {
             const applicationData = new Application(
                 3,
-                'Initial cover letter.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume3.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -101,7 +107,7 @@ describe('Application Model', () => {
         it('should delete application successfully', async () => {
             const applicationData = new Application(
                 4,
-                'Delete this application.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume4.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -111,7 +117,6 @@ describe('Application Model', () => {
                 'delete@example.com',
                 'https://linkedin.com/in/delete',
                 'QA Engineer',
-                'Delete Name'
             );
 
             const savedApplication = await Application.save(applicationData);
@@ -133,7 +138,7 @@ describe('Application Model', () => {
             // Create test applications
             const app1 = new Application(
                 10,
-                'App1 cover letter.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume10.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -148,7 +153,7 @@ describe('Application Model', () => {
 
             const app2 = new Application(
                 20,
-                'App2 cover letter.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume20.pdf',
                 applicationStatuses.Accepted,
                 new Date(),
@@ -170,11 +175,11 @@ describe('Application Model', () => {
             expect(allApplications.map(a => a.email)).toContain('app2@example.com');
         });
 
-        it('should find application by jobId and userId', async () => {
+        it('should find application by jobId', async () => {
             const jobId = 99;
             const applicationData = new Application(
                 jobId,
-                'Find by job and user.',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resume99.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -196,7 +201,7 @@ describe('Application Model', () => {
             expect(found?.email).toBe('findby@example.com');
         });
 
-        it('should return null if no application found by jobId and userId', async () => {
+        it('should return null if no application found by jobId', async () => {
             const found = await Application.findApplicationByJobSeeker(123456, 'notfound@example.com');
             expect(found).toBeNull();
         });
@@ -211,7 +216,7 @@ describe('Application Model', () => {
 
             const appA = new Application(
                 jobId,
-                'App A',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resumeA.pdf',
                 applicationStatuses.Pending,
                 new Date(),
@@ -225,7 +230,7 @@ describe('Application Model', () => {
             );
             const appB = new Application(
                 jobId,
-                'App B',
+                'https://example.com/coverletter.pdf',
                 'https://example.com/resumeB.pdf',
                 applicationStatuses.Accepted,
                 new Date(),

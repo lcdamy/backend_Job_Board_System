@@ -2,7 +2,6 @@ import { applicationStatuses } from "../types";
 
 export interface ApplicationDTO {
     jobId: number;
-    userId: number;
     coverLetter: string;
     resumeURL: string;
     status: applicationStatuses;

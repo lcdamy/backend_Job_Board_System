@@ -101,7 +101,6 @@ export class TestHelper {
   static generateMockApplication(overrides = {}) {
     return {
       jobId: 1,
-      userId: 1,
       coverLetter: 'I am very interested in this position',
       resumeURL: 'https://example.com/resume.pdf',
       status: 'pending' as any,

@@ -81,7 +81,6 @@ export const createTablesIfNotExist = (): Promise<void> => {
             CREATE TABLE IF NOT EXISTS applications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             jobId INTEGER NOT NULL,
-            userId INTEGER NOT NULL,
             coverLetter TEXT NOT NULL,
             resumeURL TEXT NOT NULL,
             status TEXT NOT NULL,
@@ -92,8 +91,7 @@ export const createTablesIfNotExist = (): Promise<void> => {
             linkedInProfile TEXT,
             jobTitle TEXT,
             names TEXT,
-            FOREIGN KEY (jobId) REFERENCES jobs(id),
-            FOREIGN KEY (userId) REFERENCES users(id)
+            FOREIGN KEY (jobId) REFERENCES jobs(id)
             )
         `;
 

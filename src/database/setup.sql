@@ -34,14 +34,12 @@ CREATE TABLE IF NOT EXISTS jobs (
 CREATE TABLE IF NOT EXISTS applications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     jobId INTEGER NOT NULL,
-    userId INTEGER NOT NULL,
     coverLetter TEXT NOT NULL,
     resumeURL TEXT NOT NULL,
     status TEXT NOT NULL,
     appliedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (jobId) REFERENCES jobs(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (jobId) REFERENCES jobs(id)
 );
 
 -- Create audit_logs table
