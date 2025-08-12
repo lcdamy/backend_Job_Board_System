@@ -11,7 +11,7 @@ import logger from '../config/logger';
 declare global {
     namespace Express {
         interface Request {
-            user?: { id: number; [key: string]: any };
+            user?: { id: number;[key: string]: any };
         }
     }
 }
@@ -30,7 +30,7 @@ export const createJob = async (req: Request, res: Response) => {
             return res.status(StatusCodes.BAD_REQUEST).json(formatResponse('error', error.details[0].message));
         }
 
-        const userId = req.user?.id; 
+        const userId = req.user?.id;
         if (!userId) {
             logger.error('User ID not found in request');
             return res.status(StatusCodes.UNAUTHORIZED).json(formatResponse('error', 'User not authenticated'));
@@ -152,6 +152,26 @@ export const deleteJob = async (req: Request, res: Response) => {
         return res.status(StatusCodes.OK).json(formatResponse("success", "Job deleted successfully"));
     } catch (error) {
         logger.error(`Error deleting job: ${(error as Error).message}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse("error", (error as Error).message));
+    }
+};
+
+export const getJobsLocations = async (req: Request, res: Response) => {
+    try {
+        const locations = await jobService.getJobsLocations();
+        return res.status(StatusCodes.OK).json(formatResponse("success", "Job locations retrieved successfully", locations));
+    } catch (error) {
+        logger.error(`Error retrieving job locations: ${(error as Error).message}`);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse("error", (error as Error).message));
+    }
+};
+
+export const jobAggregations = async (req: Request, res: Response) => {
+    try {
+        const aggregations = await jobService.getJobAggregations();
+        return res.status(StatusCodes.OK).json(formatResponse("success", "Job aggregations retrieved successfully", aggregations));
+    } catch (error) {
+        logger.error(`Error retrieving job aggregations: ${(error as Error).message}`);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(formatResponse("error", (error as Error).message));
     }
 };

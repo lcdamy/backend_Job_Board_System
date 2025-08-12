@@ -144,4 +144,35 @@ export class JobService {
             logger.info(`Job closed due to deadline expiration: ${job.id}`);
         }
     }
+
+    // get job locations
+    async getJobsLocations(): Promise<string[]> {
+        const jobs = await Job.find();
+        const locations = jobs.map(job => job.location).filter((value, index, self) => self.indexOf(value) === index);
+        return locations;
+    }
+
+    // get job aggregation total Open job, total closed job, number of applications in total and most demanded job type
+    async getJobAggregations(): Promise<any> {
+        const jobs = await Job.find();
+        const totalJobs = jobs.length;
+        const locations = jobs.map(job => job.location).filter((value, index, self) => self.indexOf(value) === index);
+        const openJobs = jobs.filter(job => job.status === 'open').length;
+        const closedJobs = jobs.filter(job => job.status === 'closed').length;
+        const jobTypeCounts = jobs.reduce((acc, job) => {
+            acc[job.type] = (acc[job.type] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
+        const mostDemandedJobType = Object.entries(jobTypeCounts).reduce(
+            (max, curr) => curr[1] > max[1] ? curr : max,
+            ["", 0]
+        )[0];
+        return {
+            totalJobs,
+            locations: locations.length,
+            openJobs,
+            closedJobs,
+            mostDemandedJobType
+        };
+    }
 }

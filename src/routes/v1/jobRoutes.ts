@@ -248,7 +248,71 @@
  *         description: Forbidden
  */
 
+/**
+ * @swagger
+ * /api/v1/job/list-job-locations:
+ *   get:
+ *     summary: Get a list of all job locations
+ *     tags: [Jobs]
+ *     responses:
+ *       200:
+ *         description: List of job locations retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
 
+/**
+ * @swagger
+ * /api/v1/job/job-aggregations:
+ *   get:
+ *     summary: Get job aggregations
+ *     tags: [Jobs]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Job aggregations retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         totalJobs:
+ *                           type: integer
+ *                           example: 100
+ *                         openJobs:
+ *                           type: integer
+ *                           example: 70
+ *                         closedJobs:
+ *                           type: integer
+ *                           example: 30
+ *                         locations:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
 import { Router } from "express";
 const { authorizationMiddleware } = require("../../middlewares/authorizationMiddleware");
 const { authenticationMiddleware } = require("../../middlewares/authenticationMiddleware");
@@ -258,7 +322,9 @@ const {
     updateJob,
     deleteJob,
     getAllJobs,
-    getJobsWithApplications
+    getJobsWithApplications,
+    getJobsLocations,
+    jobAggregations
 } = require("../../controllers/jobController");
 
 const jobRouter = Router();
@@ -271,5 +337,7 @@ jobRouter.put('/update/:id', authenticationMiddleware(), authorizationMiddleware
 jobRouter.delete('/delete/:id', authenticationMiddleware(), authorizationMiddleware(roles, 'deleteJob'), deleteJob);
 jobRouter.get('/list', getAllJobs);
 jobRouter.get('/list-with-applications', authenticationMiddleware(), authorizationMiddleware(roles, 'getJobsWithApplications'), getJobsWithApplications);
+jobRouter.get('/list-job-locations', getJobsLocations);
+jobRouter.get('/job-aggregations', authenticationMiddleware(), authorizationMiddleware(roles, 'jobAggregations'), jobAggregations);
 
 export default jobRouter;
