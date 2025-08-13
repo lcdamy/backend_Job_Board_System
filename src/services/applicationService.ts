@@ -116,7 +116,7 @@ export class ApplicationService {
             fs.mkdirSync(uploadsDir, { recursive: true });
             logger.info(`Uploads directory created: ${uploadsDir}`);
         }
-        const fileUrl = `${this.backend_host}/public/${newFileName}`;
+        const fileUrl = `${this.backend_host}/${newFileName}`;
         logger.info(`File uploaded successfully: ${fileUrl}`);
         // Save file to local storage
         const filePath = path.join(uploadsDir, newFileName);
