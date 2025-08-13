@@ -3,14 +3,14 @@ import path from 'path';
 import fs from 'fs';
 
 /**
- * Middleware to handle file uploads using multer.
- * Files are stored in the 'uploads' directory with a timestamp prefix.
+ * Middleware to handle file public using multer.
+ * Files are stored in the 'public' directory with a timestamp prefix.
  */
 
 
 const localStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../uploads');
+        const uploadPath = path.join(__dirname, '../../public');
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }

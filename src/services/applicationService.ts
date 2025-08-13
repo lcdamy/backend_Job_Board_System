@@ -43,7 +43,7 @@ export class ApplicationService {
             name: applicationData.names,
             message: `Your application for job titled "${job.title}" has been submitted. We will review your application and contact you if your resume matches our desired qualifications.`,
             link: `${this.frontend_host}/login`,
-            link_label: 'Log in to your account'
+            link_label: 'Click to Login'
         };
         if (applicationData.email) {
             sendEmail('email_template', 'Application submission', applicationData.email, context);
@@ -110,13 +110,13 @@ export class ApplicationService {
         // rename file to include timestamp
         const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
         const newFileName = `${timestamp}-${file.originalname}`;
-        const uploadsDir = path.join(__dirname, '../../uploads');
+        const uploadsDir = path.join(__dirname, '../../public');
         // Ensure uploads directory exists
         if (!fs.existsSync(uploadsDir)) {
             fs.mkdirSync(uploadsDir, { recursive: true });
             logger.info(`Uploads directory created: ${uploadsDir}`);
         }
-        const fileUrl = `${this.backend_host}/uploads/${newFileName}`;
+        const fileUrl = `${this.backend_host}/public/${newFileName}`;
         logger.info(`File uploaded successfully: ${fileUrl}`);
         // Save file to local storage
         const filePath = path.join(uploadsDir, newFileName);

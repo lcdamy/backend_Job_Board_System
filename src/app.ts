@@ -18,20 +18,14 @@ dotenv.config();
 
 const port = process.env.PORT || 3001;
 const host = process.env.HOST || 'localhost';
-const frontendHost = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = [frontendHost];
 
 const configureMiddlewares = () => {
     app.use(express.json());
     app.use(cors({ origin: '*' }));
-    app.use(cors({
-        origin: allowedOrigins,
-        credentials: true,
-    }));
     app.use(helmet());
     app.use(expressWinston.logger({ winstonInstance: logger, statusLevels: true }));
     app.use(auditLogger);
@@ -42,8 +36,8 @@ const configureMiddlewares = () => {
 const configureRoutes = () => {
     app.use('/api', routes); // Main API routes
     app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpecs)); // Swagger docs
-    app.get('/uploads/:file', (req, res) => {
-        const filePath = path.resolve(__dirname, '..', 'uploads', req.params.file);
+    app.get('/public/:file', (req, res) => {
+        const filePath = path.resolve(__dirname, '..', 'public', req.params.file);
         res.download(filePath, req.params.file, (err) => {
             if (err) {
                 console.error('Error downloading file:', err);
@@ -54,24 +48,23 @@ const configureRoutes = () => {
             }
         });
     });
-
 };
 
 const startServer = async () => {
     try {
         // Load cron jobs
         require(path.join(__dirname, 'cronjobs', 'schedules'));
-        
+
         // Ensure data directory exists
         ensureDataDirectory();
-        
+
         // Check if this is the first time running (no database exists)
         const isFirstRun = !checkDatabaseExists();
         console.log(`🔍 Database exists: ${!isFirstRun}`);
-        
+
         // Connect to database
         await connectDB();
-        
+
         if (isFirstRun) {
             // First time setup: run migrations and seeds
             console.log('🆕 First time setup detected - running migrations and seeds...');
@@ -81,11 +74,11 @@ const startServer = async () => {
             console.log('♻️  Existing database detected - ensuring schema is up to date...');
             await createTablesIfNotExist();
         }
-        
+
         // Configure middlewares and routes
         configureMiddlewares();
         configureRoutes();
-        
+
         // Start the server
         server.listen(port, () => {
             console.log(`🚀 Server running at http://${host}:${port}`);
@@ -104,6 +97,3 @@ const startServer = async () => {
 if (require.main === module) {
     startServer();
 }
-
-export { app, startServer };
-

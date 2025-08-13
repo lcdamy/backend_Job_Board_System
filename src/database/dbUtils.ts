@@ -81,7 +81,7 @@ export const seedFirstAdmin = async (): Promise<void> => {
                 Here is your temporary password: ${admin_password}. We highly recommend changing it after logging in for security purposes. 
                 Thank you for taking on this important role!`,
                     link: `${frontend_host}/login`,
-                    link_label: 'Log in to your account'
+                    link_label: 'Click to Login'
                 };
 
                 try {

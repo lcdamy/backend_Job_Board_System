@@ -57,7 +57,7 @@ const seedFirstAdmin = async () => {
             Here is your temporary password: ${admin_password}. We highly recommend changing it after logging in for security purposes. 
             Thank you for taking on this important role!`,
                 link: `${frontend_host}/login`,
-                link_label: 'Log in to your account'
+                link_label: 'Click to Login'
             };
             await sendEmail('email_template', 'Super Admin Account creation', admin_email, context);
             console.log("First admin user created successfully");

@@ -41,7 +41,7 @@ export class JobService {
             name: user.names,
             message: `Your job titled "${savedJob.title}" has been successfully created.`,
             link: `${this.frontend_host}/login`,
-            link_label: 'Log in to your account'
+            link_label: 'Click to Login'
         };
         if (user.email) {
             sendEmail('email_template', 'Job creation', user.email, context);
