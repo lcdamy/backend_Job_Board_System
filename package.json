@@ -8,7 +8,7 @@
     "start": "node dist/app.js",
     "dev": "ts-node-dev --respawn src/app.ts",
     "migrate": "ts-node src/scripts/migrate.ts",
-    "seed": "ts-node src/seeds/seedFirstAdmin.ts",
+    "seed": "ts-node src/seeds/seedFirstAdmin.ts && ts-node src/seeds/seedJobs.ts",
     "db:reset": "if exist data\\database.sqlite del data\\database.sqlite && npm run dev",
     "db:fresh": "if exist data\\database.sqlite del data\\database.sqlite && npm run migrate && npm run seed",
     "test": "jest",
