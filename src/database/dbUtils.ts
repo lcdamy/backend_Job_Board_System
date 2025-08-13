@@ -1,11 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { User } from "../models/User";
+import { Job } from '../models/Job';
 import bcrypt from "bcryptjs";
 import { sendEmail } from "../utils/emailService";
 import { generateRandomPassword } from "../utils/helper";
-import { userStatuses, UserType, RegistrationType } from "../types";
+import { userStatuses, UserType, RegistrationType, jobTypes, jobStatuses } from "../types";
 import { createTablesIfNotExist } from './init';
+
 
 /**
  * Check if database file exists
@@ -30,6 +32,7 @@ export const runInitialDatabaseSetup = async (): Promise<void> => {
         // Run seeds (create first admin)
         console.log('🔄 Running database seeds...');
         await seedFirstAdmin();
+        await seedJobListings();
         console.log('✅ Database seeding completed');
 
         console.log('🎉 Initial database setup completed successfully!');
@@ -103,6 +106,88 @@ export const seedFirstAdmin = async (): Promise<void> => {
         }
     } catch (error) {
         console.error('❌ Error in seedFirstAdmin:', error);
+        throw error;
+    }
+};
+
+/**
+ * Seed some job listings
+ */
+export const seedJobListings = async (): Promise<void> => {
+    try {
+        console.log('🔄 Seeding job listings...');
+        const jobs = [
+            {
+                title: "Software Engineer",
+                description: "Develop and maintain software applications.",
+                company: "Tech Corp",
+                location: "Kampala, Uganda",
+                deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days from now
+                type: jobTypes.FullTime,
+                status: jobStatuses.Open,
+                postedBy: 1,
+            },
+            {
+                title: "Product Manager",
+                description: "Lead product development and strategy.",
+                company: "Business Inc",
+                location: "Kigali, Rwanda",
+                deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 45), // 45 days from now
+                type: jobTypes.FullTime,
+                status: jobStatuses.Open,
+                postedBy: 1,
+            },
+            {
+                title: "UX Designer",
+                description: "Design user-friendly interfaces and experiences.",
+                company: "Creative Agency",
+                location: "Bujumbura, Burundi",
+                deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 60), // 60 days from now
+                type: jobTypes.PartTime,
+                status: jobStatuses.Open,
+                postedBy: 1,
+            },
+            {
+                title: "Data Scientist",
+                description: "Analyze and interpret complex data.",
+                company: "Data Solutions",
+                location: "Kampala, Uganda",
+                deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days from now
+                type: jobTypes.FullTime,
+                status: jobStatuses.Open,
+                postedBy: 1,
+            },
+            {
+                title: "Machine Learning Engineer",
+                description: "Develop machine learning models and algorithms.",
+                company: "AI Innovations",
+                location: "North-Province, Rwanda",
+                deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 45), // 45 days from now
+                type: jobTypes.FullTime,
+                status: jobStatuses.Open,
+                postedBy: 1,
+            }
+        ];
+
+        for (const job of jobs) {
+            const newJob = new Job(
+                job.title,
+                job.description,
+                job.company,
+                job.location,
+                job.deadline,
+                job.type,
+                job.status,
+                job.postedBy,
+                new Date(),
+                new Date()
+            );
+            await Job.save(newJob);
+            console.log(`Seeded job: ${newJob.title} at ${newJob.company}`);
+        }
+        console.log("✅ Seeded 3 job listings successfully.");
+    } catch (error) {
+        console.error('❌ Error in seedJobListings:', error);
         throw error;
     }
 };
