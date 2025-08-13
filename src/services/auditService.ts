@@ -35,9 +35,6 @@ export class AuditService {
             });
         }
 
-        // Exclude a specific doneBy
-        whereClauses.push('doneBy != ?');
-        params.push('zudanga@gmail.com');
 
         const whereSQL = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
 

@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuditLog } from '../models/AuditLog';
 
-
-export const auditLogger = (req: Request, res: Response, next: NextFunction) => {
-
+export const auditLogger = (req: any, res: Response, next: NextFunction) => {
     const startTime = Date.now();
     let oldSend = res.send;
     res.send = function (data) {
@@ -12,7 +10,7 @@ export const auditLogger = (req: Request, res: Response, next: NextFunction) => 
     };
     res.on('finish', async () => {
         const endTime = Date.now();
-        const duration = `${endTime - startTime}ms`; // duration is in milliseconds
+        const duration = `${endTime - startTime}ms`;
         const auditLog = new AuditLog(
             new Date(),
             req.method,
@@ -46,11 +44,15 @@ export const auditLogger = (req: Request, res: Response, next: NextFunction) => 
         auditLog.details = responseBody.message || 'unknown';
         auditLog.status = responseBody.status || 'unknown';
 
-        // Check if the user is authenticated and get the email
-        // const userEmail = (req.user as unknown as { email?: string })?.email || 'unknown';
-        auditLog.doneBy =  'unknown';
+        // Get user email for audit log if available
+        let userEmail = 'unknown';
+        if (req.user && typeof req.user.email === 'string') {
+            userEmail = req.user.email;
+        } else if (req.user && typeof req.user === 'string') {
+            userEmail = req.user;
+        }
+        auditLog.doneBy = userEmail;
 
-        // Save the audit log to the database
         AuditLog.save(auditLog)
             .then(() => {
                 console.log('Audit log saved successfully');
@@ -58,7 +60,6 @@ export const auditLogger = (req: Request, res: Response, next: NextFunction) => 
             .catch((error) => {
                 console.error('Error saving audit log:', error);
             });
-
     });
     next();
 };
